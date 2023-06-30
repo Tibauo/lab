@@ -1,0 +1,5 @@
+- name: OSP
+  hosts: undercloud
+  gather_facts: yes
+  roles:
+    - rdo

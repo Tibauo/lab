@@ -1,0 +1,6 @@
+- name: Quay
+  hosts: quay
+  gather_facts: yes
+  roles:
+    - podman
+    - quay

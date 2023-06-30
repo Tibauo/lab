@@ -1,0 +1,425 @@
+dir_scripts: "/root/virsh"
+
+centos9_image_name: CentOS-Stream-9-20230417.0-x86_64-boot.iso
+centos9_link: "http://centos.mirror.fr.planethoster.net/8-stream/isos/x86_64/{{ centos9_image_name }}"
+
+
+qemu_pool:
+  path: /home/pools
+  name: lab_pool
+
+image_path: "{{ dir_scripts }}/images"
+
+qemu_networks:
+  - name: pxe
+    nat: true
+    bridge: true
+    gateway: 172.16.1.1
+    netmask: 255.255.255.0
+    first_ip: 172.16.1.2
+    last_ip: 172.16.1.254
+    path: "{{ dir_scripts }}/networks"
+    address:
+      - mac_address: 52:54:00:5A:C7:05
+        ip: 172.16.1.10
+  - name: management
+    nat: true
+    bridge: true
+    gateway: 172.17.1.1
+    netmask: 255.255.255.0
+    first_ip: 172.17.1.2
+    last_ip: 172.17.1.254
+    path: "{{ dir_scripts }}/networks"
+    address:
+      - mac_address: 52:54:00:70:99:2B
+        ip: 172.17.1.10
+      - mac_address: 52:54:00:C4:32:BF
+        ip: 172.17.1.20
+      - mac_address: 52:54:00:4F:51:4D
+        ip: 172.17.1.30
+      - mac_address: 52:54:00:29:A9:15
+        ip: 172.17.1.40
+      - mac_address: 52:54:00:3A:69:94
+        ip: 172.17.1.50
+  - name: proxy
+    bridge: true
+    nat: true
+    gateway: 172.18.1.1
+    netmask: 255.255.255.0
+    first_ip: 172.18.1.2
+    last_ip: 172.18.1.254
+    path: "{{ dir_scripts }}/networks"
+    address:
+      - mac_address: 52:54:00:A4:A8:C5
+        ip: 172.18.1.10
+      - mac_address: 52:54:00:CE:F1:AC
+        ip: 172.18.1.20
+      - mac_address: 52:54:00:92:BF:DD
+        ip: 172.18.1.30
+      - mac_address: 52:54:00:05:72:BA
+        ip: 172.18.1.40
+      - mac_address: 52:54:00:3A:A7:91
+        ip: 172.18.1.50
+  - name: okd
+    bridge: true
+    nat: true
+    gateway: 192.168.1.1
+    netmask: 255.255.255.0
+    first_ip: 192.168.1.100
+    last_ip: 192.168.1.254
+    path: "{{ dir_scripts }}/networks"
+  - name: osp-provisio
+    nat: true
+    gateway: 10.1.1.1
+    netmask: 255.255.255.0
+    first_ip: 10.1.1.10
+    last_ip: 10.1.1.100
+    path: "{{ dir_scripts }}/networks"
+    address:
+      - mac_address: 52:54:00:DF:71:1E
+        ip: 10.1.1.10
+  - name: osp-external
+    path: "{{ dir_scripts }}/networks"
+    nat: true
+    bridge: true
+    gateway: 10.10.10.1
+    netmask: 255.255.255.0
+  - name: osp-storage
+    path: "{{ dir_scripts }}/networks"
+  - name: osp-internal
+    path: "{{ dir_scripts }}/networks"
+  - name: osp-tenant
+    path: "{{ dir_scripts }}/networks"
+
+qemu_vms:
+  - name: pxe
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 4
+    cpu: 4
+    cpu_mode: host
+    volume:
+      - name: pxe
+        size_gb: 40
+        path_volume: /home/pools/pxe
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+      - name: cdrom
+        device: cdrom
+        path_volume: "{{ image_path }}/{{ centos9_image_name }}"
+        dev: sda
+        path_xml: "{{ dir_scripts }}/volumes"
+        bus: sata
+        cdrom: yes
+    network:
+      - name: pxe
+        mac_address: "52:54:00:5A:C7:05"
+      - name: management
+        mac_address: "52:54:00:70:99:2B"
+      - name: proxy
+        mac_address: "52:54:00:A4:A8:C5"
+  - name: proxy
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 4
+    cpu: 4
+    cpu_mode: host
+    volume:
+      - name: proxy
+        size_gb: 20
+        path_volume: /home/pools/proxy
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+      - name: cdrom
+        device: cdrom
+        path_volume: "{{ image_path }}/{{ centos9_image_name }}"
+        dev: sda
+        path_xml: "{{ dir_scripts }}/volumes"
+        bus: sata
+        cdrom: yes
+    network:
+      - name: pxe
+        mac_address: "52:54:00:B1:4A:62"
+      - name: management
+        mac_address: "52:54:00:4F:51:4D"
+      - name: proxy
+        mac_address: "52:54:00:92:BF:DD"
+  - name: bind
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    cpu_mode: host
+    volume:
+      - name: bind
+        size_gb: 30
+        path_volume: /home/pools/bind
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+      - name: cdrom
+        device: cdrom
+        path_volume: "{{ image_path }}/{{ centos9_image_name }}"
+        dev: sda
+        path_xml: "{{ dir_scripts }}/volumes"
+        bus: sata
+        cdrom: yes
+    network:
+      - name: pxe
+        mac_address: "52:54:00:E8:DA:8D"
+      - name: management
+        mac_address: "52:54:00:29:A9:15"
+      - name: proxy
+        mac_address: "52:54:00:05:72:BA"
+  - name: quay
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu_mode: host
+    cpu: 4
+    volume:
+      - name: quay
+        size_gb: 30
+        path_volume: /home/pools/quay
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+      - name: cdrom
+        device: cdrom
+        path_volume: "{{ image_path }}/{{ centos9_image_name }}"
+        dev: sda
+        path_xml: "{{ dir_scripts }}/volumes"
+        bus: sata
+        cdrom: yes
+    network:
+      - name: pxe
+        mac_address: "52:54:00:36:79:9D"
+      - name: management
+        mac_address: "52:54:00:3A:69:94"
+      - name: proxy
+        mac_address: "52:54:00:3A:A7:91"
+  - name: okd-bastion
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    cpu_mode: host
+    volume:
+      - name: okd-bastion
+        size_gb: 30
+        path_volume: /home/pools/okd-bastion
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+      - name: cdrom
+        device: cdrom
+        path_volume: "{{ image_path }}/{{ centos9_image_name }}"
+        dev: sda
+        path_xml: "{{ dir_scripts }}/volumes"
+        bus: sata
+        cdrom: yes
+    network:
+      - name: pxe
+        mac_address: "52:54:00:E0:BE:16"
+      - name: okd
+        mac_address: "52:54:00:15:FA:07"
+  - name: undercloud
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 24
+    cpu: 8
+    cpu_mode: host
+    volume:
+      - name: undercloud
+        size_gb: 100
+        path_volume: /home/pools/undercloud
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+      - name: cdrom
+        device: cdrom
+        path_volume: "{{ image_path }}/{{ centos9_image_name }}"
+        dev: sda
+        path_xml: "{{ dir_scripts }}/volumes"
+        bus: sata
+        cdrom: yes
+    network:
+      - name: pxe
+        mac_address: "52:54:00:58:C0:28"
+      - name: osp-provisio
+        mac_address: "52:54:00:DF:71:1E"
+      - name: osp-external
+        mac_address: "52:54:00:DF:71:1A"
+
+qemu_openstack:
+  - name: overcloud-controller0
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 16
+    cpu: 8
+    cpu_mode: host
+    volume:
+      - name: controller0
+        size_gb: 100
+        path_volume: /home/pools/overcloud-controller0
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        bus: virtio
+    network:
+      - name: osp-provisio
+        mac_address: "52:54:00:93:AC:CF"
+      - name: osp-external
+        mac_address: "52:54:00:1B:35:75"
+      - name: osp-storage
+        mac_address: "52:54:00:D4:1B:AF"
+      - name: osp-internal
+        mac_address: "52:54:00:03:29:78"
+      - name: osp-tenant
+        mac_address: "52:54:00:C5:94:84"
+  - name: overcloud-controller1
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 16
+    cpu: 8
+    cpu_mode: host
+    volume:
+      - name: controller1
+        size_gb: 100
+        path_volume: /home/pools/overcloud-controller1
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        bus: virtio
+    network:
+      - name: osp-provisio
+        mac_address: "52:54:00:97:7A:EF"
+      - name: osp-external
+        mac_address: "52:54:00:40:A0:AF"
+      - name: osp-storage
+        mac_address: "52:54:00:A1:F1:2C"
+      - name: osp-internal
+        mac_address: "52:54:00:63:29:EB"
+      - name: osp-tenant
+        mac_address: "52:54:00:B1:5D:B4"
+  - name: overcloud-controller2
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 16
+    cpu: 8
+    cpu_mode: host
+    volume:
+      - name: controller2
+        size_gb: 100
+        path_volume: /home/pools/overcloud-controller2
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        bus: virtio
+    network:
+      - name: osp-provisio
+        mac_address: "52:54:00:D3:EC:72"
+      - name: osp-external
+        mac_address: "52:54:00:EE:F3:8C"
+      - name: osp-storage
+        mac_address: "52:54:00:65:72:B7"
+      - name: osp-internal
+        mac_address: "52:54:00:13:7A:1D"
+      - name: osp-tenant
+        mac_address: "52:54:00:25:1C:A5"
+  - name: overcloud-compute0
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 16
+    cpu: 8
+    cpu_mode: host
+    volume:
+      - name: controller2
+        size_gb: 100
+        path_volume: /home/pools/overcloud-compute0
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        bus: virtio
+    network:
+      - name: osp-provisio
+        mac_address: "52:54:00:D3:EC:71"
+      - name: osp-external
+        mac_address: "52:54:00:EE:F3:7C"
+      - name: osp-storage
+        mac_address: "52:54:00:65:72:A7"
+      - name: osp-internal
+        mac_address: "52:54:00:13:7A:2D"
+      - name: osp-tenant
+        mac_address: "52:54:00:25:1C:B5"
+
+qemu_okd:
+  - name: okd-bootstrap
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    volume:
+      - name: okd-bootstrap
+        size_gb: 30
+        path_volume: /home/pools/okd-bootstrap
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+    network:
+      - name: okd
+        mac_address: "52:54:00:15:FA:17"
+  - name: okd-master0
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    volume:
+      - name: okd-master0
+        size_gb: 30
+        path_volume: /home/pools/okd-master0
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda 
+        device: disk
+        bus: virtio
+    network:
+      - name: okd
+        mac_address: "52:54:00:15:FA:27"
+  - name: okd-master1
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    volume:
+      - name: okd-master1
+        size_gb: 30
+        path_volume: /home/pools/okd-master1
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda 
+        device: disk
+        bus: virtio
+    network:
+      - name: okd
+        mac_address: "52:54:00:15:FA:37"
+  - name: okd-master2
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    volume:
+      - name: okd-master2
+        size_gb: 30
+        path_volume: /home/pools/okd-master2
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda 
+        device: disk
+        bus: virtio
+    network:
+      - name: openshift
+        mac_address: "52:54:00:15:FA:47"
+  - name: okd-worker0
+    path_xml: "{{ dir_scripts }}/vms"
+    memory: 8
+    cpu: 4
+    volume:
+      - name: okd-worker0
+        size_gb: 30
+        path_volume: /home/pools/okd-worker0
+        path_xml: "{{ dir_scripts }}/volumes"
+        dev: vda
+        device: disk
+        bus: virtio
+    network:
+      - name: openshift
+        mac_address: "52:54:00:15:FA:57"

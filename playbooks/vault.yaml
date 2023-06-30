@@ -1,0 +1,5 @@
+- name: Vault
+  hosts: vault
+  gather_facts: yes
+  roles:
+    - vault

@@ -1,0 +1,30 @@
+all:
+  children:
+    physique:
+      hosts:
+        kvm:
+          ansible_host: 195.154.90.106
+          ansible_user: root
+    vm:
+      hosts:
+        pxe:
+          ansible_host: 172.16.1.10
+          ansible_user: root
+        proxy:
+          ansible_host: 172.17.1.30
+          ansible_user: root
+        vault:
+          ansible_host: 172.17.1.30
+          ansible_user: root
+        bind:
+          ansible_host: 172.17.1.30
+          ansible_user: root
+        quay:
+          ansible_host: 172.17.1.50
+          ansible_user: root
+        undercloud:
+          ansible_host: 172.16.1.70
+          ansible_user: root
+    rdo:
+      hosts:
+        undercloud:

@@ -1,0 +1,5 @@
+rdo_repo: https://trunk.rdoproject.org/centos9/component/tripleo/current/python3-tripleo-repos-0.1.1-0.20230111082341.c73cb0f.el9.noarch.rpm
+centos_release: centos9
+openstack_release: zed
+undercloud_public_host: 10.1.1.2
+undercloud_admin_host: 10.1.1.3

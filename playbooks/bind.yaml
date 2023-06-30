@@ -1,0 +1,5 @@
+- name: Quay
+  hosts: bind
+  gather_facts: yes
+  roles:
+    - bind

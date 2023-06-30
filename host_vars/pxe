@@ -1,0 +1,75 @@
+apache_port: 80
+ocp: false
+pxeboot_dir: /root/pxeboot
+os_release8: centos8
+os_release9: centos9
+pxe:
+  - dhcp_subnet: 172.16.1.0
+    dhcp_gw: 172.16.1.1
+    dhcp_broadcast: 172.16.1.255
+    dhcp_mask: 255.255.255.0
+    dhcp_addr: 172.16.1.10
+    first: 172.16.1.20
+    last: 172.16.1.100
+    servers:
+    - hostname: proxy.mylab.local
+      mac_address: 52:54:00:b1:4a:62
+      ip_pxe: 172.16.1.30
+      ip_mgmt: 172.17.1.30
+      ip_proxy: 172.18.1.30
+      release: centos9
+      baseos: "https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
+      appstream: "https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/"
+      vmlinuz: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
+      initrd: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
+    - hostname: bind.mylab.local
+      mac_address: 52:54:00:e8:da:8d
+      ip_pxe: 172.16.1.40
+      ip_mgmt: 172.17.1.40
+      ip_proxy: 172.18.1.40
+      release: centos9
+      baseos: "https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
+      appstream: "https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/"
+      vmlinuz: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
+      initrd: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
+    - hostname: quay.mylab.local
+      mac_address: 52:54:00:36:79:9d
+      ip_pxe: 172.16.1.50
+      ip_mgmt: 172.17.1.50
+      ip_proxy: 172.18.1.50
+      release: centos9
+      baseos: "https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
+      appstream: "https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/"
+      vmlinuz: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
+      initrd: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
+    - hostname: ocp-bastion.mylab.local
+      mac_address: 52:54:00:e0:be:16
+      ip_pxe: 172.16.1.60
+      ip_ocp: 192.168.1.10
+      release: centos9
+      baseos: "http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/"
+      appstream: "http://ftp.pasteur.fr/mirrors/CentOS/8-stream/AppStream/x86_64/os/"
+      vmlinuz: http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
+      initrd: http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
+    - hostname: undercloud.mylab.local
+      mac_address: 52:54:00:58:c0:28
+      ip_pxe: 172.16.1.70
+      ip_osp: 10.1.1.10
+      release: centos9
+      baseos: "https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
+      appstream: "https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/"
+      vmlinuz: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
+      initrd: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
+      part:
+        - partition: swap
+          fstype: swap
+          disk: vda
+          size: 5120
+        - partition: /boot
+          fstype: xfs
+          disk: vda
+          size: 1024
+        - partition: /
+          fstype: xfs
+          disk: vda
+          size: 96255

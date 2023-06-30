@@ -1,0 +1,6 @@
+- name: pxe
+  hosts: pxe
+  roles:
+    - apache
+    - dhcpd
+    - tftp
