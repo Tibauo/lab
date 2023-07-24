@@ -27,3 +27,6 @@ nodes:
     pm_pass: admin
     pm_port: 6003
     capabilites: "profile:control,boot_option:local"
+node_images:
+  - https://images.rdoproject.org/centos9/zed/rdo_trunk/current-tripleo/overcloud-full.tar
+  - https://images.rdoproject.org/centos9/zed/rdo_trunk/current-tripleo/ironic-python-agent.tar
