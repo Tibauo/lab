@@ -1,0 +1,4 @@
+- name: bind
+  hosts: bind
+  roles:
+    - bind

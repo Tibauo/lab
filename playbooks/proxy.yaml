@@ -1,0 +1,5 @@
+- name: Proxy
+  hosts: proxy
+  gather_facts: no
+  roles:
+    - squid

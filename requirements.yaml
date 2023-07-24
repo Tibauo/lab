@@ -1,0 +1,31 @@
+---
+roles:
+- name: vault
+  src: https://github.com/Tibauo/vault.git
+- name: apache
+  src: https://github.com/Tibauo/apache.git
+- name: dhcpd
+  src: https://github.com/Tibauo/dhcpd.git
+- name: tftp
+  src: https://github.com/Tibauo/tftp.git
+- name: bind
+  src: https://github.com/Tibauo/bind.git
+- name: podman
+  src: https://github.com/Tibauo/podman.git
+- name: quay
+  src: https://github.com/Tibauo/quay.git
+- name: rdo
+  src: https://github.com/Tibauo/rdo.git
+- name: squid
+  src: https://github.com/Tibauo/squid.git
+- name: kvm
+  src: https://github.com/Tibauo/kvm.git
+
+collections:
+- name: community.general
+  version: 6.3.0
+- name: community.crypto
+- name: containers.podman
+  version: 1.10.1
+- name: ansible.posix
+  version: 1.5.1

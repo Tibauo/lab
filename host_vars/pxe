@@ -1,6 +1,5 @@
 apache_port: 80
 ocp: false
-pxeboot_dir: /root/pxeboot
 os_release8: centos8
 os_release9: centos9
 pxe:
@@ -42,15 +41,16 @@ pxe:
       appstream: "https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/"
       vmlinuz: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
       initrd: https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
-    - hostname: ocp-bastion.mylab.local
+    - hostname: okd-bastion.mylab.local
       mac_address: 52:54:00:e0:be:16
       ip_pxe: 172.16.1.60
-      ip_ocp: 192.168.1.10
+      ip_okd: 192.168.1.10
       release: centos9
       baseos: "http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/"
       appstream: "http://ftp.pasteur.fr/mirrors/CentOS/8-stream/AppStream/x86_64/os/"
       vmlinuz: http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
       initrd: http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
+      okd: true
     - hostname: undercloud.mylab.local
       mac_address: 52:54:00:58:c0:28
       ip_pxe: 172.16.1.70
