@@ -50,7 +50,6 @@ pxe:
       appstream: "http://ftp.pasteur.fr/mirrors/CentOS/8-stream/AppStream/x86_64/os/"
       vmlinuz: http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz
       initrd: http://ftp.pasteur.fr/mirrors/CentOS/8-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img
-      okd: true
     - hostname: undercloud.mylab.local
       mac_address: 52:54:00:58:c0:28
       ip_pxe: 172.16.1.70
